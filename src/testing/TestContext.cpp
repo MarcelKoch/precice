@@ -23,6 +23,7 @@
 #include "query/Index.hpp"
 #include "testing/TestContext.hpp"
 #include "testing/Testing.hpp"
+#include "utils/Ginkgo.hpp"
 #include "utils/IntraComm.hpp"
 #include "utils/Parallel.hpp"
 #include "utils/Petsc.hpp"
@@ -43,6 +44,9 @@ TestContext::~TestContext() noexcept
   if (!invalid && _initIntraComm) {
     utils::IntraComm::getCommunication() = nullptr;
     utils::IntraComm::reset();
+  }
+  if(!invalid){
+    precice::utils::Ginkgo::finalize();
   }
 
   // Reset communicators
@@ -132,6 +136,7 @@ void TestContext::initialize(const Participants &participants)
   initializeIntraComm();
   initializeEvents();
   initializePetsc();
+  initializeGinkgo();
 }
 
 void TestContext::initializeMPI(const TestContext::Participants &participants)
@@ -224,6 +229,15 @@ void TestContext::initializePetsc()
 {
   if (!invalid && _petsc) {
     precice::utils::Petsc::initialize(nullptr, nullptr, _contextComm->comm);
+  }
+}
+
+void TestContext::initializeGinkgo()
+{
+  if(!invalid) {
+    int    argc = 0;
+    char **argv;
+    precice::utils::Ginkgo::initialize(&argc, &argv);
   }
 }
 
