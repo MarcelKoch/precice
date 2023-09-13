@@ -101,6 +101,8 @@ enum class Require {
   PETSc,
   /// Require to initialize Event.
   Events,
+  /// Kokkos initialization
+  Kokkos,
 };
 
 /** A type of distributed connection
@@ -278,6 +280,9 @@ private:
 
   /// whether to initialize events
   bool _events = false;
+
+  /// whether to initialize PETSc
+  bool _kokkos = false;
 
   /// whether this Context was created with a Ranks constructor
   bool _simple = false;
